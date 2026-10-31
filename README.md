@@ -39,13 +39,22 @@ python -m venv .venv
 .venv/bin/pip install -e ".[dev]"
 ```
 
-The sample `shop` database (customers, products, orders, order_items) is created and seeded automatically on
+On Windows the virtual environment's tools are in `.venv\Scripts\` instead of `.venv/bin/`.
+
+The sample `shop` database (200 customers, 12 products, 1,500 orders) is created and seeded automatically on
 port `5434`.
 
 Run the server over stdio:
 
 ```bash
 DATABASE_URL=postgresql://shop:shop@localhost:5434/shop pg-insight-mcp
+```
+
+PowerShell:
+
+```powershell
+$env:DATABASE_URL = "postgresql://shop:shop@localhost:5434/shop"
+.venv\Scripts\pg-insight-mcp
 ```
 
 Or over HTTP:
@@ -57,8 +66,18 @@ pg-insight-mcp --transport streamable-http
 Try it interactively with the MCP Inspector:
 
 ```bash
-npx @modelcontextprotocol/inspector .venv/bin/pg-insight-mcp
+DATABASE_URL=postgresql://shop:shop@localhost:5434/shop npx @modelcontextprotocol/inspector .venv/bin/pg-insight-mcp
 ```
+
+Click **Connect**, open the **Tools** tab and try:
+
+| Tool | Input | Expected |
+|---|---|---|
+| `list_tables` | `schema: public` | customers, products, orders, order_items |
+| `describe_table` | `table: orders` | columns, primary and foreign keys, indexes |
+| `run_query` | `SELECT status, count(*) FROM orders GROUP BY status` | order counts per status |
+| `run_query` | `DELETE FROM orders` | rejected: only read-only queries are allowed |
+| `explain_query` | `SELECT * FROM orders WHERE customer_id = 7` | plan using the customer index |
 
 ### Claude Desktop
 
@@ -76,6 +95,9 @@ Add the server to `claude_desktop_config.json`:
   }
 }
 ```
+
+On Windows the file is `%APPDATA%\Claude\claude_desktop_config.json` and the command is
+`C:\\path\\to\\pg-insight-mcp\\.venv\\Scripts\\pg-insight-mcp.exe`. Restart Claude Desktop after editing it.
 
 Then ask questions such as *"Which product category brought in the most revenue last quarter?"*.
 
@@ -113,6 +135,8 @@ ruff check src tests
 
 The end-to-end tests connect an in-memory MCP client to the server and run against the sample database. They are
 skipped when the database is not reachable.
+
+Stop the sample database with `docker compose down`.
 
 ## License
 
