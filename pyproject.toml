@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pg-insight-mcp"
+version = "0.1.0"
+description = "A read-only PostgreSQL MCP server that lets AI assistants explore schemas and query data safely"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Prasant Kumar Sahu", email = "prasantkumarsahu0103@gmail.com" }]
+dependencies = [
+    "mcp>=2.3,<3",
+    "psycopg[binary]>=3.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+pg-insight-mcp = "pg_insight.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pg_insight"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
