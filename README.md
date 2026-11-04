@@ -1,5 +1,7 @@
 # pg-insight-mcp
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/prasantkumarsahu-pg-insight-mcp-1fob5y?v=6b4b181adae03f94240ea78988992c97)](https://m8ven.ai/mcp/prasantkumarsahu-pg-insight-mcp-1fob5y?s=readme)
+
 A read-only PostgreSQL server for the [Model Context Protocol](https://modelcontextprotocol.io).
 It lets any MCP client (Claude Desktop, VS Code, Cursor, custom agents) explore a database schema, run
 analytical queries and inspect execution plans, without any chance of changing data.
